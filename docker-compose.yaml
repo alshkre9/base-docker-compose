@@ -1,25 +1,7 @@
 services:
   app:
     build: .
-    depends_on:
-      db:
-        condition: service_healthy
     volumes:
-      - ./src/:/var/www/html
+      - ./src/:app/
     ports: 
     - 80:80
-  db:
-    image: mysql
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
-    volumes:
-      # to create database schema from sql files in data dir
-      - ./data/:/docker-entrypoint-initdb.d/
-      # for recreating database schema through out init.sh commands
-      - ./mysql_data:/var/lib/mysql
